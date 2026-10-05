@@ -1,3 +1,5 @@
+import * as Location from 'expo-location';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
@@ -23,13 +25,51 @@ const kebabShops = [
 ];
 
 export default function HomeScreen() {
+  const mapRef = useRef<MapView>(null);
+  const [location, setLocation] = useState<Location.LocationObject | null>(
+    null,
+  );
+
+  useEffect(() => {
+    async function getLocation() {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+
+      if (status !== 'granted') {
+        return;
+      }
+
+      const currentLocation = await Location.getCurrentPositionAsync({});
+
+      setLocation(currentLocation);
+    }
+
+    getLocation();
+  }, []);
+
+  useEffect(() => {
+    if (!location) return;
+
+    mapRef.current?.animateToRegion(
+      {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.015,
+        longitudeDelta: 0.015,
+      },
+      1000,
+    );
+  }, [location]);
+
   return (
     <View style={styles.container}>
       <MapView
+        ref={mapRef}
         style={styles.map}
+        showsUserLocation
+        showsMyLocationButton
         initialRegion={{
-          latitude: 53.3498,
-          longitude: -6.2603,
+          latitude: location?.coords.latitude ?? 53.3498,
+          longitude: location?.coords.longitude ?? -6.2603,
           latitudeDelta: 0.08,
           longitudeDelta: 0.08,
         }}
@@ -46,7 +86,6 @@ export default function HomeScreen() {
         ))}
       </MapView>
 
-      {/* Header */}
       <View style={styles.header}>
         <View>
           <Text style={styles.logo}>KEBAPP</Text>
@@ -58,7 +97,6 @@ export default function HomeScreen() {
         </Pressable>
       </View>
 
-      {/* Search */}
       <Pressable style={styles.search}>
         <Text style={styles.searchIcon}>⌕</Text>
         <Text style={styles.searchText}>Search kebab shops...</Text>
@@ -70,7 +108,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#111111',
   },
 
   map: {

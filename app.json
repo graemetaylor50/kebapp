@@ -4,18 +4,17 @@
     "slug": "Kebapp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/kebapp-ios-icon.png",
     "scheme": "kebapp",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/images/kebapp-ios-icon.png"
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "backgroundColor": "#0B1E3A",
+        "foregroundImage": "./assets/images/kebapp-android-foreground.png",
+        "monochromeImage": "./assets/images/kebapp-android-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.scoopsdcfc.Kebapp"
@@ -29,15 +28,16 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "image": "./assets/images/kebapp-splash.png",
+          "imageWidth": 300,
+          "resizeMode": "contain",
+          "backgroundColor": "#0B1E3A"
         }
       ],
       [
         "react-native-maps",
         {
-          "androidGoogleMapsApiKey": "AIzaSyC3JoBMmEK6s8Ji12rfIY157Vdl3JvG6no"
+          "androidGoogleMapsApiKey": "${GOOGLE_MAPS_API_KEY}"
         }
       ]
     ],
