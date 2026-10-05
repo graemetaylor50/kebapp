@@ -33,13 +33,12 @@ export default {
       [
         'expo-splash-screen',
         {
-          image: './assets/images/kebapp-splash.png',
-          imageWidth: 1024,
-          resizeMode: 'cover',
+          image: './assets/images/kebapp-icon.png',
+          imageWidth: 300,
+          resizeMode: 'contain',
           backgroundColor: '#0B1E3A',
         },
       ],
-
       [
         'react-native-maps',
         {
