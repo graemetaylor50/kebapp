@@ -1,98 +1,144 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
+const kebabShops = [
+  {
+    id: '1',
+    name: 'Kebab Shop 1',
+    latitude: 53.3498,
+    longitude: -6.2603,
+  },
+  {
+    id: '2',
+    name: 'Kebab Shop 2',
+    latitude: 53.3445,
+    longitude: -6.2672,
+  },
+  {
+    id: '3',
+    name: 'Kebab Shop 3',
+    latitude: 53.3535,
+    longitude: -6.2552,
+  },
+];
 
 export default function HomeScreen() {
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
-
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
-
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
+    <View style={styles.container}>
+      <MapView
+        style={styles.map}
+        initialRegion={{
+          latitude: 53.3498,
+          longitude: -6.2603,
+          latitudeDelta: 0.08,
+          longitudeDelta: 0.08,
+        }}
+      >
+        {kebabShops.map((shop) => (
+          <Marker
+            key={shop.id}
+            coordinate={{
+              latitude: shop.latitude,
+              longitude: shop.longitude,
+            }}
+            title={shop.name}
           />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
+        ))}
+      </MapView>
 
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
+      {/* Header */}
+      <View style={styles.header}>
+        <View>
+          <Text style={styles.logo}>KEBAPP</Text>
+          <Text style={styles.subtitle}>Find your next kebab</Text>
+        </View>
+
+        <Pressable style={styles.profileButton}>
+          <Text style={styles.profileIcon}>👤</Text>
+        </Pressable>
+      </View>
+
+      {/* Search */}
+      <Pressable style={styles.search}>
+        <Text style={styles.searchIcon}>⌕</Text>
+        <Text style={styles.searchText}>Search kebab shops...</Text>
+      </Pressable>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    backgroundColor: '#111111',
+  },
+
+  map: {
+    width: '100%',
+    height: '100%',
+  },
+
+  header: {
+    position: 'absolute',
+    top: 50,
+    left: 20,
+    right: 20,
     flexDirection: 'row',
-  },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
     alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
+    justifyContent: 'space-between',
   },
-  heroSection: {
+
+  logo: {
+    fontSize: 28,
+    fontWeight: '900',
+    color: '#FF6B35',
+    letterSpacing: 1,
+  },
+
+  subtitle: {
+    marginTop: 2,
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+
+  profileButton: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    backgroundColor: '#1C1C1C',
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
+    borderWidth: 1,
+    borderColor: '#333333',
   },
-  title: {
-    textAlign: 'center',
+
+  profileIcon: {
+    fontSize: 20,
   },
-  code: {
-    textTransform: 'uppercase',
+
+  search: {
+    position: 'absolute',
+    top: 125,
+    left: 20,
+    right: 20,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: '#FFFFFF',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 18,
+    elevation: 5,
   },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+
+  searchIcon: {
+    fontSize: 27,
+    color: '#666666',
+    marginRight: 10,
+  },
+
+  searchText: {
+    fontSize: 15,
+    color: '#777777',
   },
 });
